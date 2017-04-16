@@ -242,6 +242,7 @@ for user in User.objects.filter(username__contains='CLIENTE'):
   c_pedido, c_nombre, c_cantidad, c_lista, c_stock_optimo, c_existencias = {}, {}, {}, {}, {}, {}
   for lista_i in user_listas:
     current_list = Elemento.objects.filter(lista_id = lista_i.id, producto_id__isnull = False)
+    current_custom_list = Elemento.objects.filter(lista_id = lista_i.id, producto_id__isnull = True)
     for ele in current_list:
       descripcion[ele.producto.product_ref] = ele.producto.nombre
       precio[ele.producto.product_ref] = float(ele.producto.precio)
