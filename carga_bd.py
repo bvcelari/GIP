@@ -145,6 +145,7 @@ from pprint import pprint
 with open('./small_data_set.json') as data_file:
     data = json.load(data_file)
 
+
 for i in data:
   ##Not tested, p may fail!!
   ##Not tested, p may fail!!
@@ -238,6 +239,7 @@ for user in User.objects.filter(username__contains='CLIENTE'):
   descripcion = {}
   precio = {}
   active = {}
+  c_pedido, c_nombre, c_cantidad, c_lista, c_stock_optimo, c_existencias = {}, {}, {}, {}, {}, {}
   for lista_i in user_listas:
     current_list = Elemento.objects.filter(lista_id = lista_i.id, producto_id__isnull = False)
     for ele in current_list:
@@ -255,7 +257,14 @@ for user in User.objects.filter(username__contains='CLIENTE'):
     pedido['descripcion'] = descripcion
     pedido['active'] = active
     print "Add logic to send order here"
-    send_order(pedido,proveedor)
+    for c_ele in current_custom_list:
+     c_nombre[c_ele.id]= c_ele.nombre
+      c_cantidad[c_ele.id]= c_ele.cantidad
+      c_lista[c_ele.id]= c_ele.lista.id
+      c_stock_optimo[c_ele.id]= c_ele.stock_optimo
+    c_pedido['c_nombre'], c_pedido['c_cantitdad'], c_pedido['c_lista'], c_pedido['c_stock_optimo'] = c_nombre, c_cantidad, c_lista, c_stock_optimo
+
+    send_order(pedido,proveedor,c_pedido)
   print "Done"
 
 print "Current time " + time.strftime("%X")
