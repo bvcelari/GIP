@@ -1,0 +1,194 @@
+{% extends "cliente/base_r_cliente.html" %}
+{% load staticfiles %}
+
+{% block imports %}
+
+{% endblock %}
+
+
+{% block body %}
+{% endblock %}
+
+{% block purejavascript %}
+function send(pedido_ref,proveedor_id,dest_transition){
+    var form = $('#form_send_pedido');
+
+$.ajaxSetup({ 
+     beforeSend: function(xhr, settings) {
+         function getCookie(name) {
+             var cookieValue = null;
+             if (document.cookie && document.cookie != '') {
+                 var cookies = document.cookie.split(';');
+                 for (var i = 0; i < cookies.length; i++) {
+                     var cookie = jQuery.trim(cookies[i]);
+                     // Does this cookie string begin with the name we want?
+                     if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                         break;
+                     }
+                 }
+             }
+             return cookieValue;
+         }
+         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+             // Only send the token to relative URLs i.e. locally.
+             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+         }
+     } 
+});
+     url =
+      $.ajax( {
+        type: "POST",
+        url: '/cliente/' + proveedor_id + '/estado/' + pedido_ref + '/'+dest_transition+'/',
+        dataType: '' ,
+        data: form.serialize(),
+        error: function (xhr, status) {
+            alert('Ooopps!!! Parece que algo ha ido mal ha habido un error:'+status+'.  Si persiste ponte en contacto con nosotros');
+        },
+        success: function( response ) {
+          //remove all the products!!, this will be an issue, with other searches already done in Database
+          $('#modaldemostrarpedido_'+pedido_ref).modal('hide');
+          alert(response['text'])
+          document.getElementById('REF20173000063').style.display='none'
+         }
+
+      } );
+
+}
+
+function addHidden(theForm, key, value) {
+    // Create a hidden input element, and append it to the form:
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;'name-as-seen-at-the-server';
+    input.value = value;
+    theForm.appendChild(input);
+}
+
+
+function submit_changes(pedido_ref,proveedor_id,dest_transition){
+
+  var form = document.getElementById('re_pedido')
+list_items =  $('[id^='+pedido_ref+'_]');
+  for (i = 0; i < list_items.length; i++) {
+  a = list_items[i]
+  old_ref = a.id.split('_')[1]
+  elem = a.getElementsByTagName('input')  
+  //this is the new reference
+  new_ref = elem[0].value
+  new_val = elem[1].value
+  addHidden(form,old_ref+'_'+new_ref,new_val)
+  }
+
+
+$.ajaxSetup({
+     beforeSend: function(xhr, settings) {
+         function getCookie(name) {
+             var cookieValue = null;
+             if (document.cookie && document.cookie != '') {
+                 var cookies = document.cookie.split(';');
+                 for (var i = 0; i < cookies.length; i++) {
+                     var cookie = jQuery.trim(cookies[i]);
+                     // Does this cookie string begin with the name we want?
+                     if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                         break;
+                     }
+                 }
+             }
+             return cookieValue;
+         }
+         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+             // Only send the token to relative URLs i.e. locally.
+             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+         }
+     } 
+});
+     var form = $('#re_pedido');
+
+     url =
+      $.ajax( {
+        type: "POST",
+        url: '/cliente/' + proveedor_id + '/retry_pedido/' + pedido_ref + '/'+dest_transition+'/',
+        dataType: '' ,
+        data: form.serialize(),
+        error: function (xhr, status) {
+            alert('Ooopps!!! Parece que algo ha ido mal ha habido un error:'+status+'.  Si persiste ponte en contacto con nosotros');
+        },
+        success: function( response ) {
+          //remove all the products!!, this will be an issue, with other searches already done in Database
+          $('#modaldemostrarpedido_'+pedido_ref).modal('hide');
+          alert(response['msg'])
+          document.getElementById('REF20173000063').style.display='none'
+         }
+
+      } );
+
+}
+
+</script>
+{% endblock %}
+
+
+{% block filtercategory %}
+
+{% endblock %}
+{% block content %}
+<form id="re_pedido" action="#" method="post" class="form-horizontal">
+</form>
+
+        <div id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="clearfix" id="customer-order">
+                        <p></p>
+                        <div class="box no-border">
+<div><h3>Pedidos en curso </h3></div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID. Pedido</th>
+                                            <th>Fecha</th>
+                                            <th>Total</th>
+                                            <th>Estado</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+        {% for pedido in pedidos%}
+            <tr id="{{ pedido.codigo }}">
+              <th> {{ pedido.codigo }}  </th>
+              <td> {{ pedido.fecha_creacion }}  </td>     
+              <td> {{ pedido.total }}   </td>
+              <td> 
+          <!-- TODO look for something better that iterate over the template FGS  and should workaccessiiiiing the key, but does not ./--> 
+   {% for key, value in pedidos_estados.items %}
+      
+      {% if key == pedido.pedidostate|slugify %}
+      {{ value  }}
+      {% endif %}
+   {% endfor %}
+              </td>
+             <td>
+           <a href="#modaldemostrarpedido_{{ pedido.codigo }}" data-toggle="modal" class="btn btn-template-main btn-sm">Ver</a>
+              </td>
+           </tr>
+        {% endfor %}
+                                    </tbody>
+                                </table>
+                        </div>
+                        <!-- /.box -->
+
+                    </div>
+                </div>
+                <!-- /.products -->
+            </div>
+        {{ pedidos_modales|safe }}
+    </div>
+
+
+
+{% endblock %}
+
