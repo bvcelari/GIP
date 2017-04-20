@@ -27,6 +27,7 @@ RUN apt-get install Graphviz
 RUN apt-get install -y libmysqlclient-dev
 RUN apt-get install -y libpq-dev python-dev
 RUN apt-get install -y mysql-server
+RUN apt-get install -y libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 
 # Clone app
 RUN git clone https://github.com/bvcelari/GIP
