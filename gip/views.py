@@ -23,7 +23,7 @@ def index(request):
 
 @login_required(login_url='/mylogin/')
 def login_redirect(request):
-    print request.user
+    redirect_to = resolve_url('/mylogout/')
     if User.objects.get(username=request.user).groups.filter(name='cliente').exists():
       redirect_to = resolve_url(settings.LOGIN_REDIRECT_CLIENTE) 
     elif User.objects.get(username=request.user).groups.filter(name='proveedor').exists():
