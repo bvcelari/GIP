@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/mylogin/">Inicio</a></div>{% endblock %}
+
+{% block content %}
+
+<p>{% trans "Gracias por la visita" %}</p>
+
+<p><a href="/mylogin/">{% trans 'Volver a entrar' %}</a></p>
+
+{% endblock %}
