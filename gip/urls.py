@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^cliente/', include(cliente_urls)),
     url(r'^proveedor/', include(proveedor_urls)),
+    url(r'^login_redirect/', views.login_redirect, name='login_redirect'),
     #common urls
     url(r'^mylogin/$', login),
     url(r'^mylogout/$', logout),
