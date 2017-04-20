@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'gip',
     'django_fsm',
+    'sorl.thumbnail',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -85,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', 
         'NAME': 'gip',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
@@ -129,4 +130,16 @@ GROUPED_BY = {
     'fuera de la empresa':[50000,60000],
     'Historico':[90000,11000,-1]
   }
+
+STATIC_UPLOAD = 'upload/'
+MEDIA_URL = STATIC_UPLOAD
+MEDIA_ROOT = STATIC_UPLOAD
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MY_URL = 'http://172.17.0.2:8000/'
+
+LOGIN_REDIRECT_URL = '/login_redirect/'
+LOGIN_REDIRECT_PROVEEDOR = '/proveedor/'
+LOGIN_REDIRECT_CLIENTE = '/cliente/'
+
 
