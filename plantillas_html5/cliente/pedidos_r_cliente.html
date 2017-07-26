@@ -90,10 +90,10 @@ document.getElementById('totales').innerHTML = '<font size="+1">TOTAL: '+ sum + 
                 <div class="row">
                     <div class="clearfix" id="customer-order">
                         <div class="box no-border">
-<div><h3>Pedido por cursar </h3> Si no hay pedidos por cursar, aparecerá el texto "no hay pedidos pendientes de cursar" oo
- algo asin.... pero... como si no hay pedido por cursar? tus elementos personales, siempre están ahi, no puedo adivinarlo</div>
-
-
+<div><h3>Tu proximo pedido:</h3> 
+{% if can_order == False %}
+<h3>No hay pedidos pendientes de cursar</h3>
+{% endif %}
         <form id="trickform">
         <div>
 
@@ -142,7 +142,11 @@ document.getElementById('totales').innerHTML = '<font size="+1">TOTAL: '+ sum + 
             <table id="table_totales" class="table">
               <tbody>
                 <tr>
+{% if can_order == False %}
+                  <th id="order_now">Pedir</td>
+{% else %}
                   <th id="order_now"><a href="/cliente/make/pedido/" class="btn btn-xs btn-info" type="button" >Pedir</a></td>
+{% endif %}
                   <th id="print"><a href="javascript:window.print()" class="btn btn-xs btn-info" type="button">Imprimir</a></td>
                   <th id="totales" class="text-right" colspan=4>TOTAL: </td>
                 </tr>

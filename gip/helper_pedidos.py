@@ -99,9 +99,20 @@ def generate_modales_historico(pedidos):
       <!--acaba modal muestra pedido tipo 1-->
     </div>""".format(pedido.total)
     modales += header+body+foot
-  print modales
   return modales
 
     
 
     
+def pedido_requirements(full_lista):
+  """ the default input is a dict with a lista per index and a array as values
+  {<Lista: lista_con_datos >: [<Elemento: real_element... >] }
+  """
+  status = False
+  for lista in full_lista:
+    for elem in full_lista[lista]:
+      if elem.cantidad > 0:
+        status = True
+        break
+
+  return status

@@ -15,7 +15,7 @@ from django.conf import settings
 #import only the needed ones
 from gip.models import *
 from gip.utils import is_cliente
-from gip.helper_pedidos import send_order, generate_modales_historico
+from gip.helper_pedidos import send_order, generate_modales_historico, pedido_requirements
 from gip.helper_cliente import generate_modales_encurso
 
 from django.db.models import Q
@@ -393,6 +393,10 @@ def pedidos(request):
       #TODO: I am sure this can be done better, one query and split in code or... something like that
       full_listas[lista_i]= Elemento.objects.filter(lista_id = lista_i.id, producto_id__isnull = False)
       lista_compra[lista_i]= Elemento.objects.filter(lista_id = lista_i.id, producto_id__isnull = True)
+
+    can_order = pedido_requirements(full_listas)
+    print can_order
+    print "can we order?"
     #remove elementos from listas, and create an independent one for the view
     #for i in full_listas:
     #  for k in full_listas[i]:
@@ -402,6 +406,7 @@ def pedidos(request):
                'current_page': current_page,
                'user_listas': user_listas,
                'full_listas': full_listas,
+               'can_order': can_order,
                'lista_compra': lista_compra}
     return render(request, 'cliente/pedidos_r_cliente.html', context)
 
@@ -419,6 +424,7 @@ def make_pedido(request):
     print cliente
     print "with the user id:"
     print current_user.id
+    can_order = False
     proveedor = cliente[0].user.groups.exclude(name=CLIENTE_ATTRIBUTE)[0]
     pedido = {}
     cliente = cliente.values()[0]
@@ -435,6 +441,8 @@ def make_pedido(request):
         descripcion[ele.producto.product_ref] = ele.producto.nombre
         precio[ele.producto.product_ref] = float(ele.producto.precio)
         active[ele.producto.product_ref] = 1
+        if ele.cantidad:
+          can_order = True
         if ele.producto.product_ref in orden:
           orden[ele.producto.product_ref] += ele.cantidad
         else:
@@ -455,6 +463,8 @@ def make_pedido(request):
     pedido['descripcion'] = descripcion
     pedido['active'] = active 
     print "Add logic to send order here"
+    print "can_oder:"
+    print can_order
     #really?? again?? TODO: fix cliente
     cliente = Cliente.objects.get(user_id = current_user.id)
     try: 
