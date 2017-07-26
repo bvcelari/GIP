@@ -8,6 +8,11 @@ from django.shortcuts import resolve_url
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth.models import User, Group
+#from DRF
+from rest_framework import viewsets
+from serializers import UserSerializer, GroupSerializer
+
+
 
 
 
@@ -33,3 +38,16 @@ def login_redirect(request):
     return HttpResponseRedirect(redirect_to)
 
     
+
+#views for DRF
+
+class UserViewVSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def retrieve(self, request, pk=None):
+        if pk == 'i':
+            return Response(UserSerializer(request.user,
+                context={'request':request}).data)
+        return super(UserViewSet, self).retrieve(request, pk)
+

@@ -21,6 +21,9 @@ from gip import views_proveedor
 from gip import cliente_urls
 from gip import proveedor_urls
 from django.contrib.auth.views import login, logout
+from rest_framework.authtoken.views import obtain_auth_token
+
+
 
 
 
@@ -40,3 +43,5 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [ url(r'^obtain-auth-token/$', obtain_auth_token) ]

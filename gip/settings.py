@@ -40,6 +40,8 @@ INSTALLED_APPS = (
     'gip',
     'django_fsm',
     'sorl.thumbnail',
+    'rest_framework',
+    'rest_framework.authtoken',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -91,6 +93,14 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    )
+}
+
 
 
 # Internationalization
