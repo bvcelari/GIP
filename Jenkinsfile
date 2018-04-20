@@ -5,6 +5,18 @@ pipeline {
             steps {
                 sh 'python --version'
             }
+        }        
+        stage('Sanity ') {
+            steps {
+                input "Does the uilding  looks good?"
+            }
         }
+
+         stage('live') {
+            steps {
+                sh 'python --version'
+            }
+        }   
+        
     }
 }
